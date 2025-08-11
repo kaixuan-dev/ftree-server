@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.191.16:8036/ftree?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 03a0fa56-a203-4ce2-aea9-2fb1e1b90ed1
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5 # 最小空闲连接数
+      maximum-pool-size: 10 # 最大连接数
+      idle-timeout: 600000 # 空闲连接超时时间（毫秒）
+      max-lifetime: 1800000 # 连接的最大生命周期（毫秒）
+      connection-timeout: 30000 # 连接超时时间（毫秒）
+      connection-test-query: SELECT 1 # 测试连接的SQL查询
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: org.example.ftree.entity
