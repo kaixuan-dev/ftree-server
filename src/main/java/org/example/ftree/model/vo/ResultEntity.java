@@ -14,19 +14,19 @@ import lombok.*;
 public class ResultEntity<T> {
     private Integer code;
     private String message;
-    private T entity;
+    private T data;
 
-    public ResultEntity(String message, T entity) {
-        this.code = 1;
+    public ResultEntity(String message, T data) {
+        this.code = 0;
         this.message = message;
-        this.entity = entity;
+        this.data = data;
     }
 
-    public static <T> ResultEntity<T> success(String message, T entity) {
-        ResultEntity<T> resultEntity = new ResultEntity<>();
-        resultEntity.code = 1;
-        resultEntity.message = message;
-        resultEntity.entity = entity;
-        return resultEntity;
+    public static <T> ResultEntity<T> success(String message, T data) {
+        ResultEntity<T> result = new ResultEntity<>();
+        result.code = 0;
+        result.message = message;
+        result.data = data;
+        return result;
     }
 }
