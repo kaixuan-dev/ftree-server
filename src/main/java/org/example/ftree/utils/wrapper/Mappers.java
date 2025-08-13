@@ -2,10 +2,17 @@ package org.example.ftree.utils.wrapper;
 
 
 
+import com.alibaba.fastjson2.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
+import org.example.ftree.model.dto.PageDTO;
 import org.example.ftree.utils.wrapper.meta.Entity;
+import org.example.ftree.utils.wrapper.meta.TableMapping;
 import org.example.ftree.utils.wrapper.struct.QueryWrapper;
+import org.example.ftree.utils.wrapper.struct.UpdateWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,25 +1,23 @@
 package org.example.ftree.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.ftree.utils.wrapper.meta.Entity;
 
 @Setter
 @Getter
 @ToString
-@TableName("t_user_role_rel")
+@Entity.Table(table_name = "t_user_role_rel")
 public class UserRoleRel {
 
-    @TableId("rel_id")
+    @Entity.TableField(column_name = "rel_id")
     private Long relId;
 
-    @TableField("user_id")
+    @Entity.TableField(column_name = "user_id")
     private String userId;
 
-    @TableField("role_id")
+    @Entity.TableField(column_name = "role_id")
     private Long roleId;
 
 }

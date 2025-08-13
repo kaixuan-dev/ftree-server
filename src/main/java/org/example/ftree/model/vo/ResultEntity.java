@@ -22,8 +22,11 @@ public class ResultEntity<T> {
         this.entity = entity;
     }
 
-    public ResultEntity(String message) {
-        this.code = 1;
-        this.message = message;
+    public static <T> ResultEntity<T> success(String message, T entity) {
+        ResultEntity<T> resultEntity = new ResultEntity<>();
+        resultEntity.code = 1;
+        resultEntity.message = message;
+        resultEntity.entity = entity;
+        return resultEntity;
     }
 }

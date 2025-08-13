@@ -3,6 +3,7 @@ package org.example.ftree.utils.wrapper.struct;
 
 
 import lombok.Getter;
+import org.example.ftree.mapper.SimpleQueryMapper;
 import org.example.ftree.utils.wrapper.Example;
 import org.example.ftree.utils.wrapper.Mappers;
 import org.example.ftree.utils.wrapper.Reflects;

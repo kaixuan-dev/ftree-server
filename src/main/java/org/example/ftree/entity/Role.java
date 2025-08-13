@@ -1,33 +1,32 @@
 package org.example.ftree.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.ftree.utils.wrapper.meta.Entity;
 
 import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @ToString
-@TableName("t_role")
+@Entity.Table(table_name = "t_role")
 public class Role {
 
-    @TableId("role_id")
+    @Entity.TableField(column_name ="role_id")
     private Long roleId;
 
-    @TableField("role_tag")
+    @Entity.TableField(column_name = "role_tag")
     private String roleTag;
 
-    @TableField("role_name")
+    @Entity.TableField(column_name = "role_name")
     private String roleName;
 
-    @TableField("create_time")
+    @Entity.TableField(column_name = "create_time")
     private LocalDateTime createTime;
 
-    @TableField("update_time")
+    @Entity.TableField(column_name = "update_time")
     private LocalDateTime updateTime;
 
 }

@@ -2,6 +2,7 @@ package org.example.ftree.utils.wrapper.struct;
 
 
 import lombok.Getter;
+import org.example.ftree.utils.Snowflake;
 
 import java.util.function.Supplier;
 
@@ -12,10 +13,7 @@ import java.util.function.Supplier;
 public enum PkStrategies {
 
     SNOW_ID(() -> {
-        return UUIDString.IdGenerator.nextId();
-    }),
-    UUID_32(() -> {
-        return UUIDString.get32UUID();
+        return new Snowflake().nextId();
     }),
     AUTO_INC(() -> {
         return null;

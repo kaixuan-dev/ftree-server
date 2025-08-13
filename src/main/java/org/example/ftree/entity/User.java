@@ -1,48 +1,46 @@
 package org.example.ftree.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.ftree.utils.wrapper.meta.Entity;
 
 import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @ToString
-@TableName("t_user")
+@Entity.Table(table_name = "t_user")
 public class User {
 
-    @TableId("id")
+    @Entity.TableField(column_name = "id")
     private Long id;
 
-    @TableField("user_id")
+    @Entity.TableField(column_name = "user_id")
     private String userId;
 
-    @TableField("user_name")
+    @Entity.TableField(column_name = "user_name")
     private String userName;
 
-    @TableField("password")
+    @Entity.TableField(column_name = "password")
     private String password;
 
-    @TableField("user_type")
+    @Entity.TableField(column_name = "user_type")
     private String userType;
 
-    @TableField("name")
+    @Entity.TableField(column_name = "name")
     private String name;
 
-    @TableField("mobile_phone")
+    @Entity.TableField(column_name = "mobile_phone")
     private String mobilePhone;
 
-    @TableField("status")
+    @Entity.TableField(column_name = "status")
     private String status;
 
-    @TableField("create_time")
+    @Entity.TableField(column_name = "create_time")
     private LocalDateTime createTime;
 
-    @TableField("update_time")
+    @Entity.TableField(column_name = "update_time")
     private LocalDateTime updateTime;
 
 }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.ftree.mapper.SimpleQueryMapper">
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="select" resultType="java.util.Map">
+        <!--
+            1、columns不可能SQL注入，因为是固化在class字段的注解TableFiled里面的，
+            2、tableName 也不可能SQL注入，因为是固化在class的注解TableName里面的，
+            3、example 不可能注入，因为其形式如： A 操作符（如 =、in） B ，其中A原因同1，操作符是代码写死的，B是#{}
+        -->
+        SELECT
+        <if test="ew.distinct != null and ew.distinct != ''">
+            distinct
+        </if>
+        ${ew.columns}
+        FROM ${ew.tableName}
+        <if test="example != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <!--GROUP BY-->
+        <if test="ew.groupByClause != null and ew.groupByClause != ''">
+            group by ${ew.groupByClause}
+        </if>
+        <!--排序-->
+        <if test="ew.orderByClause != null and ew.orderByClause != ''">
+            order by ${ew.orderByClause}
+        </if>
+        <!--手动分页-->
+        <if test="ew.limit != null and ew.offset != null">
+            limit ${ew.offset},${ew.limit}
+        </if>
+    </select>
+
+    <update id="updateByExample" parameterType="map">
+        update ${tableName}
+        set
+        <foreach collection="setColumns" item="ew" separator=",">
+            <!--不可能SQL注入，因为 columnName 是固化在class字段的注解TableFiled里面的，-->
+            ${ew.columnName} =
+            <if test="ew.jdbcType != null">
+                <!--不可能SQL注入，因为 jdbcType 是固化在class字段的注解TableFiled里面的，-->
+                #{ew.value,jdbcType=${ew.jdbcType}}
+            </if>
+            <if test="ew.jdbcType == null">
+                #{ew.value}
+            </if>
+        </foreach>
+        <if test="example != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </update>
+
+
+    <insert id="insert" parameterType="map">
+        insert into ${tableName}
+        <!--不可能SQL注入，因为 columnName 是固化在class字段的注解TableFiled里面的，-->
+        <foreach collection="setColumns" item="ew" open="(" close=")" separator=",">
+            ${ew.columnName}
+        </foreach>
+        values
+        <foreach collection="setColumns" item="ew" open="(" close=")" separator=",">
+            <!--不可能SQL注入，因为 jdbcType 是固化在class字段的注解TableFiled里面的，-->
+            <if test="ew.jdbcType != null">
+                #{ew.value,jdbcType=${ew.jdbcType}}
+            </if>
+            <if test="ew.jdbcType == null">
+                #{ew.value}
+            </if>
+        </foreach>
+    </insert>
+
+    <!--批量新增-->
+    <insert id="bathInsert" parameterType="map">
+        insert into ${tableName}
+        <foreach collection="columns" item="ew" open="(" close=")" separator=",">
+            ${ew.columnName}
+        </foreach>
+        values
+        <foreach collection="values" item="value"  separator=",">
+            (
+            <foreach collection="value" item="ew" separator=",">
+                <if test="ew.jdbcType != null">
+                    #{ew.value,jdbcType=${ew.jdbcType}}
+                </if>
+                <if test="ew.jdbcType == null">
+                    #{ew.value}
+                </if>
+            </foreach>
+            )
+        </foreach>
+    </insert>
+
+
+    <insert id="deleteByExample" parameterType="map">
+        delete from ${tableName}
+        <if test="example != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </insert>
+
+</mapper>

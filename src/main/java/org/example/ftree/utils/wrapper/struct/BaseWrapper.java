@@ -2,6 +2,8 @@ package org.example.ftree.utils.wrapper.struct;
 
 
 import lombok.Getter;
+import org.example.ftree.mapper.SimpleQueryMapper;
+import org.example.ftree.utils.wrapper.Example;
 
 @Getter
 public class BaseWrapper <E> {

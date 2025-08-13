@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.type.JdbcType;
+import org.example.ftree.mapper.SimpleQueryMapper;
 import org.example.ftree.utils.wrapper.Example;
 import org.example.ftree.utils.wrapper.Mappers;
 import org.example.ftree.utils.wrapper.Reflects;
