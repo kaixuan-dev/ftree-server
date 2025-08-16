@@ -21,8 +21,8 @@ public class UserController {
      */
     @GetMapping("/me")
     public ResultEntity<Map<String, Object>> me() {
-        return ResultEntity.success("登录成功", new HashMap<>() {{
-            put("roles", List.of("admin"));
+        return ResultEntity.success("登录成功", new HashMap<String, Object>() {{
+            put("roles", Arrays.asList("admin"));
             put("username", "zengkaixuan");
         }});
     }
