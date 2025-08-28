@@ -18,7 +18,7 @@ public class CommonExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResultEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
-        StringBuilder sb = new StringBuilder("校验失败:");
+        StringBuilder sb = new StringBuilder();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             sb.append(fieldError.getField()).append("：").append(fieldError.getDefaultMessage()).append(", ");
         }
@@ -29,7 +29,6 @@ public class CommonExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     @ResponseBody
     public ResultEntity<String> businessException(BusinessException e) {
-        log.warn("业务异常：{}", e.getMessage());
         return new ResultEntity<>(-1, e.getMessage(), null);
     }
 }

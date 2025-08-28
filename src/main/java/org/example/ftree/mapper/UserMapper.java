@@ -1,5 +1,7 @@
 package org.example.ftree.mapper;
 
-public interface UserMapper {
+import org.example.ftree.entity.User;
+
+public interface UserMapper extends SimpleBaseMapper<User> {
 
 }

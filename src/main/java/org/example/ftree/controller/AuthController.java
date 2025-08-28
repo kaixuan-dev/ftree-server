@@ -1,16 +1,13 @@
 package org.example.ftree.controller;
 
 import org.example.ftree.model.dto.auth.LoginDto;
+import org.example.ftree.model.vo.auth.CaptchaVo;
 import org.example.ftree.model.vo.ResultEntity;
 import org.example.ftree.model.vo.auth.LoginVo;
 import org.example.ftree.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
 @RestController
@@ -26,11 +23,20 @@ public class AuthController {
      * @return
      */
     @PostMapping("/login")
-    public ResultEntity<LoginVo> login(@Valid @RequestBody LoginDto loginDto) {
-        String token = authService.userLogin(loginDto);
-        LoginVo loginVo = new LoginVo();
-        loginVo.setToken(token);
+    public ResultEntity<LoginVo> login(@Validated @RequestBody LoginDto loginDto) {
+        LoginVo loginVo = authService.userLogin(loginDto);
         return ResultEntity.success("登录成功", loginVo);
+    }
+
+    /**
+     * 获取验证码
+     *
+     * @return
+     */
+    @GetMapping("/captcha")
+    public ResultEntity<CaptchaVo> captcha() {
+        CaptchaVo captcha = authService.captcha();
+        return ResultEntity.success("获取验证码成功", captcha);
     }
 
 }
