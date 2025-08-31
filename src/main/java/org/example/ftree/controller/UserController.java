@@ -1,18 +1,26 @@
 package org.example.ftree.controller;
 
+import org.example.ftree.entity.User;
 import org.example.ftree.model.vo.ResultEntity;
+import org.example.ftree.model.vo.user.MeVo;
+import org.example.ftree.service.UserService;
+import org.example.ftree.utils.UserUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 @RequestMapping("/users")
 @RestController
 public class UserController {
+
+    @Autowired
+    private UserUtils userUtils;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 我的信息
@@ -20,11 +28,10 @@ public class UserController {
      * @return
      */
     @GetMapping("/me")
-    public ResultEntity<Map<String, Object>> me() {
-        return ResultEntity.success("登录成功", new HashMap<String, Object>() {{
-            put("roles", Arrays.asList("admin"));
-            put("username", "zengkaixuan");
-        }});
+    public ResultEntity<MeVo> me(HttpServletRequest httpServletRequest) {
+        User user = userUtils.getUserFromRequest(httpServletRequest);
+        MeVo meVo = userService.me(user);
+        return ResultEntity.success("查询我的信息", meVo);
     }
 
 }

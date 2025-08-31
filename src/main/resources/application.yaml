@@ -20,3 +20,13 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: org.example.ftree.entity
+
+project:
+  login:
+    img-salt: c8610256db4e40a7bd2e86560b4c4855
+    token-salt: c8610256db4e40a7bd2e86560b4c4855
+#  接口白名单，无需登录的
+  none-auth:
+    uris:
+      - /auth/captcha
+      - /auth/login

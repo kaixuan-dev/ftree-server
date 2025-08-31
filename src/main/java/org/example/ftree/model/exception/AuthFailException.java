@@ -5,17 +5,16 @@ import java.util.Formatter;
 /**
  * @author zengk
  */
-public class BusinessException extends RuntimeException {
+public class AuthFailException extends RuntimeException {
 
-    public BusinessException(String message) {
+    public AuthFailException(String message) {
         super(message);
     }
 
-    public BusinessException(String format, Object... args) {
+    public AuthFailException(String format, Object... args) {
         super(new Formatter()
                 .format(format.replace("{}", "%s"), args)
                 .toString()
         );
     }
-
 }

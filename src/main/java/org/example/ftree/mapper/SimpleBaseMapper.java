@@ -2,7 +2,7 @@ package org.example.ftree.mapper;
 
 
 
-import org.example.ftree.model.dto.PageDTO;
+import org.example.ftree.model.vo.PageVo;
 import org.example.ftree.utils.SpringContextUtils;
 import org.example.ftree.utils.wrapper.struct.QueryWrapper;
 import org.example.ftree.utils.wrapper.struct.UpdateWrapper;
@@ -70,7 +70,7 @@ public interface SimpleBaseMapper<T> {
      * @param size
      * @return
      */
-    default PageDTO<T> selectPage(QueryWrapper<T> where, int page, int size) {
+    default PageVo<T> selectPage(QueryWrapper<T> where, int page, int size) {
         return where.mapper(getSimpleQueryMapper()).selectPage(page, size);
     }
 
@@ -82,7 +82,7 @@ public interface SimpleBaseMapper<T> {
      * @param size
      * @return
      */
-    default PageDTO<Map<String, Object>> selectSourcePage(QueryWrapper<T> where, int page, int size) {
+    default PageVo<Map<String, Object>> selectSourcePage(QueryWrapper<T> where, int page, int size) {
         return where.mapper(getSimpleQueryMapper()).selectSourcePage(page, size);
     }
 

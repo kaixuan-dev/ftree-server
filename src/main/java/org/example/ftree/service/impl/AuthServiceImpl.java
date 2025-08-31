@@ -9,10 +9,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.example.ftree.entity.User;
 import org.example.ftree.mapper.UserMapper;
 import org.example.ftree.model.dto.auth.LoginDto;
+import org.example.ftree.model.enums.UserStatus;
+import org.example.ftree.model.enums.UserType;
 import org.example.ftree.model.exception.BusinessException;
 import org.example.ftree.model.vo.auth.CaptchaVo;
 import org.example.ftree.model.vo.auth.LoginVo;
 import org.example.ftree.service.AuthService;
+import org.example.ftree.service.EncValueService;
 import org.example.ftree.utils.AESUtil;
 import org.example.ftree.utils.wrapper.struct.QueryWrapper;
 import org.example.ftree.utils.wrapper.struct.Wrappers;
@@ -29,24 +32,20 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserMapper userMapper;
 
-    @Value("${project.login.salt}")
-    private String loginSalt;
+    @Autowired
+    private EncValueService encValueService;
 
+    @Value("${project.login.img-salt}")
+    private String loginImgSalt;
+
+    @Value("${project.login.token-salt}")
+    private String loginTokenSalt;
 
     @Override
     public LoginVo userLogin(LoginDto dto) {
         //校验验证码
         String imgCode = dto.getImgCode();
-        String imgCodeDecrypt = AESUtil.decrypt(imgCode, loginSalt);
-        if (StringUtils.isBlank(imgCodeDecrypt)) {
-            throw new BusinessException("验证码要素错误，请刷新页面");
-        }
-        JSONObject cacheValue = JSON.parseObject(imgCodeDecrypt);
-        Long expire = cacheValue.getLong("expire");
-        String verCode = cacheValue.getString("verCode");
-        if (Objects.isNull(expire) || expire < System.currentTimeMillis()) {
-            throw new BusinessException("验证码错误，请重试");
-        }
+        String verCode = encValueService.decrypt(imgCode, loginImgSalt);
         if (!dto.getCode().equals(verCode)) {
             throw new BusinessException("验证码错误，请重试");
         }
@@ -56,13 +55,17 @@ public class AuthServiceImpl implements AuthService {
                 .where(w -> w.createCriteria()
                         .andEqualTo(User::getUserName, StringUtils.trim(dto.getUsername()))
                         .andEqualTo(User::getPassword, StringUtils.trim(dto.getPassword()))
+                        .andEqualTo(User::getStatus, UserStatus.ENABLE.getVal())
+                        .andEqualTo(User::getUserType, UserType.PC.getVal())
                 );
         User user = userMapper.selectOne(queryWrapper);
         if (Objects.isNull(user) || Objects.isNull(user.getUserId())) {
             throw new BusinessException("用户不存在或密码错误");
         }
         LoginVo loginVo = new LoginVo();
-        loginVo.setToken(user.getUserId());
+        //Token 24小时过期
+        Integer tokenExpireSecond = 24 * 60 * 60;
+        loginVo.setToken(encValueService.encrypt(user.getUserId(), tokenExpireSecond, loginTokenSalt));
         return loginVo;
     }
 
@@ -71,12 +74,7 @@ public class AuthServiceImpl implements AuthService {
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(130, 48, 2);
         String verCode = captcha.text().toLowerCase();
         //过期时间是三分钟
-        long expireLimit = 3 * 60 * 1000;
-
-        JSONObject cacheValue = new JSONObject();
-        cacheValue.put("verCode", verCode);
-        cacheValue.put("expire", System.currentTimeMillis() + expireLimit);
-        String imgCode = AESUtil.encrypt(cacheValue.toJSONString(), loginSalt);
+        String imgCode = encValueService.encrypt(verCode, 180, loginImgSalt);
         String imgSource = captcha.toBase64();
 
         CaptchaVo captchaVo = new CaptchaVo();

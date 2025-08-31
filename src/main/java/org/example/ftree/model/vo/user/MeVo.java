@@ -1,4 +1,4 @@
-package org.example.ftree.model.dto;
+package org.example.ftree.model.vo.user;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +9,10 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class PageDTO<T> {
+public class MeVo {
 
-    private long total;
-    private List<T> data;
+    private String name;
+
+    private List<String> roles;
 
 }

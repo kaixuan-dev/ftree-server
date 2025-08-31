@@ -14,4 +14,17 @@ public interface Predicates {
     //包含有效字符
     Predicate<Object> STRING_NOT_BLANK = value -> value != null && StringUtils.isNotBlank(value.toString());
     Predicate<Object> OBJECT_NOT_NULL = Objects::nonNull;
+
+    /**
+     * like 左右匹配
+     *
+     * @param value
+     * @return
+     */
+    static String likeValue(String value) {
+        if (STRING_NOT_BLANK.test(value)) {
+            return "%" + value + "%";
+        }
+        return null;
+    }
 }

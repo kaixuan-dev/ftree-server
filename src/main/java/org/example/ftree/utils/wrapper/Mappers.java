@@ -8,7 +8,7 @@ import com.github.pagehelper.PageHelper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
-import org.example.ftree.model.dto.PageDTO;
+import org.example.ftree.model.vo.PageVo;
 import org.example.ftree.utils.wrapper.meta.Entity;
 import org.example.ftree.utils.wrapper.meta.TableMapping;
 import org.example.ftree.utils.wrapper.struct.QueryWrapper;
@@ -89,27 +89,27 @@ public class Mappers {
             return Optional.ofNullable(maps).orElse(new ArrayList<>());
         }
 
-        public PageDTO<Map<String, Object>> selectSourcePage(int page, int size) {
+        public PageVo<Map<String, Object>> selectSourcePage(int page, int size) {
             try (Page<Map<String, Object>> result = PageHelper.startPage(page, size)) {
                 //查数据
                 List<Map<String, Object>> source = this.query();
-                PageDTO<Map<String, Object>> pageDTO = new PageDTO<>();
-                pageDTO.setTotal(result.getTotal());
-                pageDTO.setData(source);
-                return pageDTO;
+                PageVo<Map<String, Object>> pageVo = new PageVo<>();
+                pageVo.setTotal(result.getTotal());
+                pageVo.setData(source);
+                return pageVo;
             } finally {
                 PageHelper.clearPage();
             }
         }
 
-        public PageDTO<E> selectPage(int page, int size) {
-            PageDTO<Map<String, Object>> sourcePage = this.selectSourcePage(page, size);
-            PageDTO<E> pageDTO = new PageDTO<>();
+        public PageVo<E> selectPage(int page, int size) {
+            PageVo<Map<String, Object>> sourcePage = this.selectSourcePage(page, size);
+            PageVo<E> pageVo = new PageVo<>();
             //1、此处为返回接过来为List<Map<String, Object>>：map.key为对象的属性名，map.value均为object类型(mybatis会根据数据库类中自动转java类型),比如varchar转string
             //2、此处依靠fastJson做第二次转换，序列化再反序列化对性能有影响
-            pageDTO.setData(JSON.parseArray(JSON.toJSONString(sourcePage.getData()), this.wrapper.getEntityClass()));
-            pageDTO.setTotal(sourcePage.getTotal());
-            return pageDTO;
+            pageVo.setData(JSON.parseArray(JSON.toJSONString(sourcePage.getData()), this.wrapper.getEntityClass()));
+            pageVo.setTotal(sourcePage.getTotal());
+            return pageVo;
         }
 
         public List<E> selectAll() {
@@ -150,8 +150,8 @@ public class Mappers {
          * @return
          */
         public long count0() {
-            PageDTO<Map<String, Object>> pageDTO = this.selectSourcePage(-1, -1);
-            return pageDTO.getTotal();
+            PageVo<Map<String, Object>> pageVo = this.selectSourcePage(-1, -1);
+            return pageVo.getTotal();
         }
     }
 

@@ -1,6 +1,7 @@
 package org.example.ftree.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.ftree.model.exception.AuthFailException;
 import org.example.ftree.model.exception.BusinessException;
 import org.example.ftree.model.vo.ResultEntity;
 import org.springframework.validation.BindingResult;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestControllerAdvice
@@ -30,5 +33,11 @@ public class CommonExceptionHandler {
     @ResponseBody
     public ResultEntity<String> businessException(BusinessException e) {
         return new ResultEntity<>(-1, e.getMessage(), null);
+    }
+
+    @ExceptionHandler(AuthFailException.class)
+    public void authFailException(AuthFailException e, HttpServletResponse response) {
+        log.error("authFail:{}", e.getMessage());
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
